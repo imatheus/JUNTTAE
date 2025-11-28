@@ -1,195 +1,206 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Comprar Ingressos
-            </h2>
-            <a href="{{ route('client.event.show', $event->id) }}" class="text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors">
-                ← Voltar ao Evento
-            </a>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem;">
+            <h2 class="page-title">Comprar Ingressos</h2>
+            <a href="{{ route('client.event.show', $event->id) }}" class="link-primary">← Voltar ao Evento</a>
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            @if(session('error'))
-                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                    <p class="text-sm text-red-700">{{ session('error') }}</p>
-                </div>
-            @endif
+    <div style="max-width: 56rem; margin: 0 auto;">
+        @if(session('error'))
+            <div class="alert alert-error">{{ session('error') }}</div>
+        @endif
 
-            <!-- Etapa 1: Seleção de Quantidade -->
-            <div id="step1" class="bg-white rounded-xl shadow-md overflow-hidden">
-                <div class="p-8">
-                    <!-- Informações do Evento -->
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold text-gray-900 mb-6">{{ $event->titulo }}</h1>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 rounded-lg">
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Data e Hora</span>
-                                <span class="block text-base text-gray-900">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y H:i') }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Local</span>
-                                <span class="block text-base text-gray-900">{{ $event->local }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Valor Unitário</span>
-                                <span class="block text-2xl font-bold text-green-600">R$ {{ number_format($event->valor, 2, ',', '.') }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Ingressos Disponíveis</span>
-                                <span class="block text-xl font-bold text-blue-600">{{ $event->availableTickets() }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Formulário de Quantidade -->
-                    <div class="mb-8">
-                        <label for="quantidade" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Quantidade de Ingressos
-                        </label>
-                        <input type="number" 
-                               name="quantidade" 
-                               id="quantidade" 
-                               min="1" 
-                               max="{{ min(10, $event->availableTickets()) }}" 
-                               value="1"
-                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
-                               onchange="updateTotal()">
-                        <p class="text-sm text-gray-500 mt-2">Máximo: {{ min(10, $event->availableTickets()) }} ingressos por compra</p>
-                    </div>
-
-                    <!-- Resumo do Valor -->
-                    <div class="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-100">
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-semibold text-gray-700">Valor Total:</span>
-                            <span class="text-3xl font-bold text-indigo-600" id="valorTotal">
-                                R$ {{ number_format($event->valor, 2, ',', '.') }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Botões -->
-                    <div class="flex gap-4">
-                        <a href="{{ route('client.event.show', $event->id) }}" 
-                           class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg text-center transition-colors">
-                            Cancelar
-                        </a>
-                        <button type="button" 
-                                onclick="showPixPayment()"
-                                class="flex-1 btn-primary">
-                            Continuar para Pagamento
-                        </button>
+        <div class="card">
+            <div class="card-body">
+                {{-- Detalhes do Evento --}}
+                <div class="section-divider" style="display:flex; align-items:center; justify-content:space-between;">
+                    <div>
+                        <div style="font-size:0.75rem; color:#6b7280; text-transform:uppercase; font-weight:700;">Evento</div>
+                        <div class="card-title" style="margin:0;">{{ $event->titulo }}</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Etapa 2: Pagamento PIX (Oculto inicialmente) -->
-            <div id="step2" class="bg-white rounded-xl shadow-md overflow-hidden hidden">
-                <div class="p-8">
-                    <div class="text-center mb-8">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
-                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                <div class="form-grid columns-2" style="gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="card-base card-bordered" style="padding: 1rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:2.5rem; height:2.5rem; border-radius:0.5rem; background:#dbeafe; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="#2563eb" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Pagamento via PIX</h2>
-                        <p class="text-gray-600">Escaneie o QR Code ou copie o código PIX</p>
-                    </div>
-
-                    <!-- Resumo da Compra -->
-                    <div class="mb-8 p-6 bg-gray-50 rounded-lg">
-                        <h3 class="text-sm font-semibold text-gray-700 uppercase mb-4">Resumo da Compra</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Evento:</span>
-                                <span class="font-semibold text-gray-900">{{ $event->titulo }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Quantidade:</span>
-                                <span class="font-semibold text-gray-900" id="resumoQuantidade">1 ingresso(s)</span>
-                            </div>
-                            <div class="flex justify-between pt-3 border-t border-gray-200">
-                                <span class="text-lg font-semibold text-gray-700">Total:</span>
-                                <span class="text-2xl font-bold text-indigo-600" id="resumoTotal">R$ {{ number_format($event->valor, 2, ',', '.') }}</span>
-                            </div>
+                        <div>
+                            <div style="font-size:0.75rem; color:#6b7280; text-transform:uppercase; font-weight:700;">Data e Hora</div>
+                            <div style="font-weight:600; color:#111827;">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y H:i') }}</div>
                         </div>
                     </div>
 
-                    <!-- QR Code PIX -->
-                    <div class="mb-8">
-                        <div class="bg-white border-2 border-gray-200 rounded-lg p-8 text-center">
-                            <div class="inline-block p-4 bg-white">
-                                <!-- QR Code gerado dinamicamente -->
-                                <div id="qrcode" class="mx-auto"></div>
-                            </div>
-                            <p class="text-sm text-gray-500 mt-4">Escaneie este QR Code com o app do seu banco</p>
+                    <div class="card-base card-bordered" style="padding: 1rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:2.5rem; height:2.5rem; border-radius:0.5rem; background:#dcfce7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="#16a34a" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size:0.75rem; color:#6b7280; text-transform:uppercase; font-weight:700;">Local</div>
+                            <div style="font-weight:600; color:#111827;">{{ $event->local }}</div>
                         </div>
                     </div>
 
-                    <!-- Código PIX Copia e Cola -->
-                    <div class="mb-8">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Ou copie o código PIX:
-                        </label>
-                        <div class="flex gap-2">
-                            <input type="text" 
-                                   id="pixCode" 
-                                   value="00020126580014BR.GOV.BCB.PIX0136{{ Str::uuid() }}520400005303986540{{ number_format($event->valor, 2, '', '') }}5802BR5925JUNTTAE EVENTOS LTDA6009SAO PAULO62070503***6304ABCD"
-                                   readonly
-                                   class="flex-1 px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-sm font-mono">
-                            <button type="button" 
-                                    onclick="copyPixCode()"
-                                    class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition-colors">
-                                Copiar
-                            </button>
+                    <div class="card-base card-bordered" style="padding: 1rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:2.5rem; height:2.5rem; border-radius:0.5rem; background:#10b981; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                         </div>
-                        <p class="text-xs text-gray-500 mt-2">Cole este código no app do seu banco na opção PIX Copia e Cola</p>
-                    </div>
-
-                    <!-- Instruções -->
-                    <div class="mb-8 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-                        <h4 class="text-sm font-semibold text-blue-900 mb-2">Instruções:</h4>
-                        <ol class="text-sm text-blue-800 space-y-1 list-decimal list-inside">
-                            <li>Abra o app do seu banco</li>
-                            <li>Escolha a opção PIX</li>
-                            <li>Escaneie o QR Code ou cole o código PIX</li>
-                            <li>Confirme o pagamento</li>
-                            <li>Após o pagamento, clique em "Confirmar Pagamento" abaixo</li>
-                        </ol>
-                    </div>
-
-                    <!-- Timer Fake -->
-                    <div class="mb-8 text-center">
-                        <p class="text-sm text-gray-600 mb-2">Tempo restante para pagamento:</p>
-                        <p class="text-2xl font-bold text-gray-900" id="timer">15:00</p>
-                    </div>
-
-                    <!-- Formulário de Confirmação -->
-                    <form method="POST" action="{{ route('client.purchase.process', $event->id) }}" id="purchaseForm">
-                        @csrf
-                        <input type="hidden" name="quantidade" id="quantidadeHidden" value="1">
-                        
-                        <div class="flex gap-4">
-                            <button type="button" 
-                                    onclick="backToStep1()"
-                                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
-                                Voltar
-                            </button>
-                            <button type="submit" 
-                                    class="flex-1 btn-primary">
-                                Confirmar Pagamento
-                            </button>
+                        <div>
+                            <div style="font-size:0.75rem; color:#047857; text-transform:uppercase; font-weight:700;">Valor Unitário</div>
+                            <div class="price-value" style="font-size:1.25rem;">R$ {{ number_format($event->valor, 2, ',', '.') }}</div>
                         </div>
-                    </form>
+                    </div>
 
-                    <p class="text-xs text-center text-gray-500 mt-4">
-                        Este é um processo de pagamento simulado para fins de demonstração
-                    </p>
+                    <div class="card-base card-bordered" style="padding: 1rem; display:flex; gap:0.75rem; align-items:flex-start;">
+                        <div style="width:2.5rem; height:2.5rem; border-radius:0.5rem; background:#bfdbfe; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="#1d4ed8" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size:0.75rem; color:#1d4ed8; text-transform:uppercase; font-weight:700;">Disponíveis</div>
+                            <div style="font-weight:700; color:#1f2937;">{{ $event->availableTickets() }}</div>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- Quantidade --}}
+                <div class="section-divider">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+                        <svg width="16" height="16" fill="none" stroke="#4f46e5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                        <strong style="font-size:0.875rem; color:#374151; text-transform:uppercase;">Quantidade de Ingressos</strong>
+                    </div>
+
+                    <div class="form-row" style="align-items:center;">
+                        <button type="button" onclick="decrementQuantity()" class="btn-secondary btn-inline" style="width:3rem; height:3rem; padding:0;">
+                            <svg width="18" height="18" fill="none" stroke="#1f2937" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                            </svg>
+                        </button>
+
+                        <input type="number" name="quantidade" id="quantidade" min="1" max="{{ min(10, $event->availableTickets()) }}" value="1" class="input-field" style="text-align:center; font-size:1.25rem; font-weight:700; width: 8rem;" onchange="updateTotal()" readonly>
+
+                        <button type="button" onclick="incrementQuantity()" class="btn-secondary btn-inline" style="width:3rem; height:3rem; padding:0;">
+                            <svg width="18" height="18" fill="none" stroke="#1f2937" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="mt-2" style="font-size:0.875rem; color:#6b7280; text-align:center;">Máximo de <strong style="color:#374151;">{{ min(10, $event->availableTickets()) }}</strong> ingressos por compra</p>
+                </div>
+
+                {{-- Valor Total --}}
+                <div class="card-base card-bordered" style="padding:1rem; margin: 1rem 0 1.5rem 0; background: linear-gradient(90deg, #f9fafb, #f3f4f6);">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <div>
+                            <div style="font-size:0.875rem; color:#6b7280; font-weight:600;">Valor Total</div>
+                            <div id="valorTotal" style="font-size:2rem; font-weight:800; color:#1f2937;">R$ {{ number_format($event->valor, 2, ',', '.') }}</div>
+                        </div>
+                        <div style="width:3.5rem; height:3.5rem; border-radius:50%; background:#e5e7eb; display:flex; align-items:center; justify-content:center;">
+                            <svg width="24" height="24" fill="none" stroke="#374151" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Ações --}}
+                <div class="button-group">
+                    <a href="{{ route('client.event.show', $event->id) }}" class="btn-secondary" style="flex:1; display:flex; align-items:center; justify-content:center;">
+                        Cancelar
+                    </a>
+                    <button type="button" id="btnAbrirModal" class="btn-primary" style="flex:1; display:flex; align-items:center; justify-content:center;">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pagamento PIX -->
+    <div id="pixModal" style="display:none; position:fixed; inset:0; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; padding: 1rem; align-items: center; justify-content: center;">
+        <div class="card-base card-bordered" style="background: white; border-radius: 1rem; max-width: 42rem; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);" onclick="event.stopPropagation()">
+            
+            <!-- Header do Modal -->
+            <div class="section-divider" style="position: sticky; top: 0; background: white; padding: 1rem 1.5rem; border-radius: 1rem 1rem 0 0; z-index: 10; display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <div style="width:2.5rem; height:2.5rem; background:#e0e7ff; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                        <svg width="20" height="20" fill="none" stroke="#4f46e5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size:1.25rem; font-weight:700; color:#111827; margin:0;">Pagamento via PIX</h3>
+                        <p style="font-size:0.875rem; color:#6b7280; margin:0;">Escaneie o QR Code ou copie o código</p>
+                    </div>
+                </div>
+                <button type="button" id="btnFecharModal" style="color:#9ca3af; background:none; border:none; cursor:pointer; padding:0.5rem;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div style="padding: 1.5rem;">
+                <div class="card-base card-bordered" style="margin-bottom:1.5rem; padding: 1rem; background: linear-gradient(90deg, #f9fafb, #f3f4f6); border-radius:0.75rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.875rem; color:#374151; text-transform:uppercase; font-weight:600; margin-bottom:0.5rem;">
+                        <svg width="16" height="16" fill="none" stroke="#374151" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Resumo da Compra
+                    </div>
+                    <div class="info-list">
+                        <div class="info-row"><span class="info-label">Evento</span><span class="info-value" style="font-weight:600;">{{ $event->titulo }}</span></div>
+                        <div class="info-row"><span class="info-label">Quantidade</span><span class="info-value" id="modalQuantidade">1 ingresso</span></div>
+                        <div class="info-row" style="border-top:1px solid #d1d5db; padding-top:0.5rem;">
+                            <span class="info-label" style="font-size:1rem;">Total</span>
+                            <span class="info-value" id="modalTotal" style="font-size:1.25rem; font-weight:700; color:#4f46e5;">R$ {{ number_format($event->valor, 2, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                    <div class="card-base card-bordered" style="padding: 1.5rem; text-align:center;">
+                        <div style="display:flex; justify-content:center; align-items:center; min-height:240px;">
+                            <div id="qrcode"></div>
+                        </div>
+                        <p style="font-size:0.875rem; color:#6b7280; margin-top:0.75rem;">Escaneie com o app do seu banco</p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                    <label style="display:block; font-size:0.875rem; font-weight:600; color:#374151; margin-bottom:0.5rem;">Código PIX Copia e Cola:</label>
+                    <div class="form-row">
+                        <input type="text" id="pixCode" readonly class="input-field" style="flex:1; font-family:monospace; font-size:0.8rem;" />
+                        <button type="button" id="btnCopiar" class="btn-secondary btn-inline" style="white-space:nowrap;">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="card-base card-bordered" style="margin-bottom:1.5rem; text-align:center; padding:1rem; background:#eff6ff; border-color:#bfdbfe;">
+                    <p style="font-size:0.875rem; color:#1e40af; margin-bottom:0.25rem;">Tempo restante:</p>
+                    <p id="timer" style="font-size:2rem; font-weight:700; color:#1e3a8a; margin:0;">15:00</p>
+                </div>
+
+                <form method="POST" action="{{ route('client.purchase.process', $event->id) }}" id="purchaseForm">
+                    @csrf
+                    <input type="hidden" name="quantidade" id="quantidadeHidden" value="1">
+                    <div class="button-group">
+                        <button type="button" id="btnCancelar" class="btn-secondary" style="flex:1;">Cancelar</button>
+                        <button type="submit" class="btn-primary" style="flex:1;">Confirmar Pagamento</button>
+                    </div>
+                </form>
+
+                <p style="font-size:0.75rem; text-align:center; color:#9ca3af; margin-top:1rem;">Pagamento simulado para demonstração</p>
             </div>
         </div>
     </div>
@@ -199,103 +210,110 @@
 
     <script>
         const valorUnitario = {{ $event->valor }};
+        const maxQuantidade = {{ min(10, $event->availableTickets()) }};
         let timerInterval;
 
         function updateTotal() {
             const quantidade = parseInt(document.getElementById('quantidade').value);
             const total = quantidade * valorUnitario;
-            
             const formatted = 'R$ ' + total.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             document.getElementById('valorTotal').textContent = formatted;
         }
 
-        function showPixPayment() {
-            const quantidade = parseInt(document.getElementById('quantidade').value);
-            const total = quantidade * valorUnitario;
-            
-            // Atualiza resumo
-            document.getElementById('resumoQuantidade').textContent = quantidade + ' ingresso(s)';
-            document.getElementById('resumoTotal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            document.getElementById('quantidadeHidden').value = quantidade;
-            
-            // Atualiza código PIX com valor correto
-            const pixValue = total.toFixed(2).replace('.', '');
-            const pixCode = `00020126580014BR.GOV.BCB.PIX0136{{ Str::uuid() }}520400005303986540${pixValue}5802BR5925JUNTTAE EVENTOS LTDA6009SAO PAULO62070503***6304ABCD`;
-            document.getElementById('pixCode').value = pixCode;
-            
-            // Gera QR Code
-            document.getElementById('qrcode').innerHTML = '';
-            new QRCode(document.getElementById('qrcode'), {
-                text: pixCode,
-                width: 256,
-                height: 256,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
-            
-            // Mostra step 2 e esconde step 1
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-            
-            // Inicia timer
-            startTimer();
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function incrementQuantity() {
+            const input = document.getElementById('quantidade');
+            let value = parseInt(input.value);
+            if (value < maxQuantidade) {
+                input.value = value + 1;
+                updateTotal();
+            }
         }
 
-        function backToStep1() {
-            document.getElementById('step2').classList.add('hidden');
-            document.getElementById('step1').classList.remove('hidden');
-            
-            // Para o timer
-            if (timerInterval) {
-                clearInterval(timerInterval);
+        function decrementQuantity() {
+            const input = document.getElementById('quantidade');
+            let value = parseInt(input.value);
+            if (value > 1) {
+                input.value = value - 1;
+                updateTotal();
             }
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal() {
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            const total = quantidade * valorUnitario;
+            document.getElementById('modalQuantidade').textContent = quantidade + ' ' + (quantidade === 1 ? 'ingresso' : 'ingressos');
+            document.getElementById('modalTotal').textContent = 'R$ ' + total.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            document.getElementById('quantidadeHidden').value = quantidade;
+            const pixValue = total.toFixed(2).replace('.', '');
+            const uuid = generateUUID();
+            const pixCode = `00020126580014BR.GOV.BCB.PIX0136${uuid}520400005303986540${pixValue}5802BR5925JUNTTAE EVENTOS LTDA6009SAO PAULO62070503***6304ABCD`;
+            document.getElementById('pixCode').value = pixCode;
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            try {
+                new QRCode(qrcodeDiv, { text: pixCode, width: 200, height: 200, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
+            } catch (error) {
+                qrcodeDiv.innerHTML = '<p style="color: #ef4444;">Erro ao gerar QR Code</p>';
+            }
+            const modal = document.getElementById('pixModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            startTimer();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('pixModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (timerInterval) { clearInterval(timerInterval); }
+            document.getElementById('timer').textContent = '15:00';
+            document.getElementById('timer').style.color = '#1e3a8a';
         }
 
         function copyPixCode() {
             const pixCode = document.getElementById('pixCode');
-            pixCode.select();
-            pixCode.setSelectionRange(0, 99999); // Para mobile
-            
+            const copyBtn = document.getElementById('btnCopiar');
             navigator.clipboard.writeText(pixCode.value).then(() => {
-                // Feedback visual
-                const button = event.target;
-                const originalText = button.textContent;
-                button.textContent = 'Copiado!';
-                button.classList.add('bg-green-500', 'text-white');
-                button.classList.remove('bg-gray-200', 'text-gray-800');
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.classList.remove('bg-green-500', 'text-white');
-                    button.classList.add('bg-gray-200', 'text-gray-800');
-                }, 2000);
+                copyBtn.textContent = '✓ Copiado!';
+                copyBtn.style.background = '#10b981';
+                copyBtn.style.color = 'white';
+                setTimeout(() => { copyBtn.textContent = 'Copiar'; copyBtn.style.background = ''; copyBtn.style.color = ''; }, 2000);
             });
         }
 
         function startTimer() {
-            let timeLeft = 900; // 15 minutos em segundos
-            
+            if (timerInterval) { clearInterval(timerInterval); }
+            let timeLeft = 900; // 15 minutos
             timerInterval = setInterval(() => {
                 timeLeft--;
-                
                 const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
-                
-                document.getElementById('timer').textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
+                const timerElement = document.getElementById('timer');
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('timer').textContent = '00:00';
-                    document.getElementById('timer').classList.add('text-red-600');
+                    timerElement.textContent = '00:00';
+                    timerElement.style.color = '#dc2626';
                 }
             }, 1000);
         }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0; const v = c == 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnAbrir = document.getElementById('btnAbrirModal');
+            if (btnAbrir) { btnAbrir.addEventListener('click', openModal); }
+            const btnFechar = document.getElementById('btnFecharModal');
+            if (btnFechar) { btnFechar.addEventListener('click', closeModal); }
+            const btnCancelar = document.getElementById('btnCancelar');
+            if (btnCancelar) { btnCancelar.addEventListener('click', closeModal); }
+            const btnCopiar = document.getElementById('btnCopiar');
+            if (btnCopiar) { btnCopiar.addEventListener('click', copyPixCode); }
+            const modal = document.getElementById('pixModal');
+            if (modal) { modal.addEventListener('click', function(e) { if (e.target.id === 'pixModal') { closeModal(); } }); }
+            document.addEventListener('keydown', function(event) { if (event.key === 'Escape') { closeModal(); } });
+        });
     </script>
 </x-app-layout>

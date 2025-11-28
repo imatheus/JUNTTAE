@@ -14,28 +14,29 @@ $classes = ($active ?? false)
 .nav-link {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.25rem;
-    border-bottom: 2px solid transparent;
+    padding: 0.375rem 0.5rem;
+    border: none; /* remove underline style */
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.25;
     color: #6b7280;
-    transition: all 0.15s ease-in-out;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 .nav-link:hover {
-    color: #374151;
-    border-bottom-color: #d1d5db;
+    color: #1f2937;
+    background-color: #f3f4f6; /* gray-100 */
 }
 
 .nav-link-active {
     color: #1f2937;
-    border-bottom-color: #6366f1;
+    background-color: #f3f4f6; /* keep bg gray when active */
 }
 
 .nav-link:focus {
     outline: none;
-    color: #374151;
-    border-bottom-color: #6366f1;
+    color: #1f2937;
+    background-color: #f3f4f6;
 }
 </style>
