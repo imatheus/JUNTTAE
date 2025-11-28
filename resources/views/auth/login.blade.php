@@ -1,22 +1,24 @@
 <x-guest-layout>
     <!-- Logo e Título -->
-    <div class="text-center mb-6">
+    <div class="auth-header">
         @if(file_exists(public_path('img/logo.jpeg')))
-            <img src="{{ asset('img/logo.jpeg') }}" alt="Junttaê Logo" class="w-16 h-16 mx-auto mb-3 rounded-full object-cover">
+            <img src="{{ asset('img/logo.jpeg') }}" alt="Junttaê Logo" class="auth-logo">
         @endif
-        <h1 class="text-2xl font-bold text-gray-900">JUNTTAÊ</h1>
-        <p class="text-xs text-gray-500 mt-1">Entre na sua conta</p>
+        <h1 class="auth-title">JUNTTAÊ</h1>
+        <p class="auth-subtitle">Entre na sua conta</p>
     </div>
 
     <!-- Status da Sessão -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="form-group">
+        <x-auth-session-status :status="session('status')" />
+    </div>
 
     <!-- Formulário -->
-    <form method="POST" action="{{ route('login') }}" class="space-y-3">
+    <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email -->
-        <div>
+        <div class="form-group">
             <x-input-label for="email" value="Email" class="sr-only"/>
             <input id="email" 
                    type="email" 
@@ -25,33 +27,26 @@
                    required 
                    autofocus 
                    autocomplete="username"
-                   placeholder="E-mail"
-                   class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                   placeholder="E-mail">
+            <x-input-error :messages="$errors->get('email')" />
         </div>
 
         <!-- Senha -->
-        <div>
+        <div class="form-group">
             <x-input-label for="password" value="Senha" class="sr-only"/>
             <input id="password" 
                    type="password" 
                    name="password" 
                    required 
                    autocomplete="current-password"
-                   placeholder="Senha"
-                   class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                   placeholder="Senha">
+            <x-input-error :messages="$errors->get('password')" />
         </div>
 
         <!-- Lembrar de mim -->
-        <div class="flex items-center">
-            <input id="remember_me" 
-                   type="checkbox" 
-                   name="remember"
-                   class="w-4 h-4 text-blue-600 bg-gray-50 border-gray-200 rounded focus:ring-2 focus:ring-blue-500">
-            <label for="remember_me" class="ml-2 text-sm text-gray-600">
-                Lembrar de mim
-            </label>
+        <div class="form-row">
+            <input id="remember_me" type="checkbox" name="remember">
+            <label for="remember_me" style="font-size: 0.875rem; color: #6b7280;">Lembrar de mim</label>
         </div>
 
         <!-- Botão Entrar -->
@@ -60,17 +55,12 @@
         </button>
 
         <!-- Links -->
-        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+        <div class="form-footer">
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:text-blue-700 transition-colors">
-                    Esqueceu sua senha?
-                </a>
+                <a href="{{ route('password.request') }}" class="link-primary" style="font-size: 0.875rem;">Esqueceu sua senha?</a>
             @endif
-            
             @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="text-sm text-blue-600 hover:text-blue-700 transition-colors">
-                    Cadastrar-se
-                </a>
+                <a href="{{ route('register') }}" class="link-primary" style="font-size: 0.875rem;">Cadastrar-se</a>
             @endif
         </div>
     </form>

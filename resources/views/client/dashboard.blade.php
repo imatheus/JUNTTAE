@@ -3,9 +3,8 @@
         <h2 class="page-title">Eventos Disponíveis</h2>
     </x-slot>
 
-    <div class="py-12">
+    <div>
         <div class="container">
-            
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -27,44 +26,46 @@
             @if($events->isEmpty())
                 <div class="card">
                     <div class="card-body text-center">
-                        <p class="text-lg text-gray-600">Nenhum evento disponível no momento.</p>
+                        <p style="color:#6b7280; font-size: 1rem;">Nenhum evento disponível no momento.</p>
                     </div>
                 </div>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div class="cards-grid">
                     @foreach($events as $event)
                         <div class="card">
-                            @if($event->imagem)
-                                <img src="{{ asset('storage/' . $event->imagem) }}" alt="{{ $event->titulo }}" class="w-full h-48 object-cover">
-                            @else
-                                <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                    <span class="text-sm text-gray-400 font-medium">Sem imagem</span>
-                                </div>
-                            @endif
-                            
+                            <div class="card-media">
+                                @if($event->imagem)
+                                    <img src="{{ asset('storage/' . $event->imagem) }}" alt="{{ $event->titulo }}">
+                                @else
+                                    <div class="card-media-placeholder">
+                                        <span>Sem imagem</span>
+                                    </div>
+                                @endif
+                            </div>
+
                             <div class="card-body">
-                                <h3 class="text-xl font-bold text-gray-900 mb-4">{{ $event->titulo }}</h3>
-                                
-                                <div class="space-y-3 mb-6">
-                                    <div class="flex">
-                                        <span class="w-20 text-xs font-semibold text-gray-500 uppercase">Data</span>
-                                        <span class="flex-1 text-sm text-gray-900">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y H:i') }}</span>
+                                <h3 class="card-title">{{ $event->titulo }}</h3>
+
+                                <div class="info-list">
+                                    <div class="info-row">
+                                        <span class="info-label">Data</span>
+                                        <span class="info-value">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y H:i') }}</span>
                                     </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-xs font-semibold text-gray-500 uppercase">Local</span>
-                                        <span class="flex-1 text-sm text-gray-900">{{ $event->local }}</span>
+                                    <div class="info-row">
+                                        <span class="info-label">Local</span>
+                                        <span class="info-value">{{ $event->local }}</span>
                                     </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-xs font-semibold text-gray-500 uppercase">Categoria</span>
-                                        <span class="flex-1 text-sm text-gray-900">{{ $event->categoria }}</span>
+                                    <div class="info-row">
+                                        <span class="info-label">Categoria</span>
+                                        <span class="info-value">{{ $event->categoria }}</span>
                                     </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-xs font-semibold text-gray-500 uppercase">Valor</span>
-                                        <span class="flex-1 text-sm font-bold text-green-600">R$ {{ number_format($event->valor, 2, ',', '.') }}</span>
+                                    <div class="info-row">
+                                        <span class="info-label">Valor</span>
+                                        <span class="info-value price-value">R$ {{ number_format($event->valor, 2, ',', '.') }}</span>
                                     </div>
-                                    <div class="flex">
-                                        <span class="w-20 text-xs font-semibold text-gray-500 uppercase">Ingressos</span>
-                                        <span class="flex-1 text-sm text-gray-900">{{ $event->availableTickets() }} de {{ $event->ingressos }}</span>
+                                    <div class="info-row">
+                                        <span class="info-label">Ingressos</span>
+                                        <span class="info-value">{{ $event->availableTickets() }} de {{ $event->ingressos }}</span>
                                     </div>
                                 </div>
 

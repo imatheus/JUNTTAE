@@ -1,3 +1,6 @@
+/* Built for static serving (no Vite) */
+
+/*=== Begin CSS from resources/css/app.css ===*/
 /* ========================================
    BASE E RESET
    ======================================== */
@@ -312,6 +315,21 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 .auth-wrapper { width: 100%; max-width: 24rem; }
 .auth-card { background: #fff; border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg); padding: 1.5rem; }
 
+/* Cabeçalho do card de auth */
+.auth-header { text-align: center; margin-bottom: 1.5rem; }
+.auth-logo { width: 64px; height: 64px; border-radius: 999px; object-fit: cover; display: block; margin: 0 auto 0.75rem; }
+.auth-title { font-size: 1.5rem; font-weight: 700; color: var(--color-gray-900); }
+.auth-subtitle { font-size: 0.75rem; color: var(--color-gray-500); margin-top: 0.25rem; }
+
+/* Form padrão */
+.form-group { margin-bottom: 1rem; }
+.form-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.form-footer { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--color-gray-200); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+
+/* Grid de formulário opcional */
+.form-grid { display: grid; gap: 1rem; }
+@media (min-width: 768px) { .form-grid.columns-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* ========================================
    HERO / DESTAQUE
    ======================================== */
@@ -381,3 +399,24 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c
 
 /* Lista de erros padrão */
 .error-list { margin-top: 0.5rem; color: var(--color-danger); font-size: 0.875rem; list-style: disc; padding-left: 1.25rem; }
+
+/* ========================================
+   GRID DE CARDS RESPONSIVO
+   ======================================== */
+.cards-grid { display: grid; gap: 1rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
+@media (min-width: 640px) { .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* Media do card (imagem/placeholder) */
+.card-media img { width: 100%; height: 12rem; object-fit: cover; display: block; }
+.card-media-placeholder { width: 100%; height: 12rem; background: linear-gradient(135deg, var(--color-gray-100), var(--color-gray-200)); display: flex; align-items: center; justify-content: center; }
+.card-media-placeholder span { color: var(--color-gray-400); font-weight: 500; font-size: 0.875rem; }
+
+/* Título e informações */
+.card-title { font-size: 1.25rem; font-weight: 700; color: var(--color-gray-900); margin-bottom: 1rem; }
+.info-list { margin-bottom: 1.5rem; }
+.info-list > * + * { margin-top: 0.75rem; }
+.info-row { display: flex; align-items: baseline; }
+.info-label { width: 5rem; font-size: 0.75rem; font-weight: 600; color: var(--color-gray-500); text-transform: uppercase; }
+.info-value { flex: 1; font-size: 0.875rem; color: var(--color-gray-900); }
+.price-value { color: var(--color-success); font-weight: 700; }
