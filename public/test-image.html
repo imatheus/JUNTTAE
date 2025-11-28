@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Imagem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        .error {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Teste de Carregamento de Imagens</h1>
+        
+        <div class="info">
+            <h3>Informações do Sistema:</h3>
+            <ul>
+                <li><strong>Link Simbólico:</strong> public/storage → storage/app/public</li>
+                <li><strong>Disco de Armazenamento:</strong> public</li>
+                <li><strong>Pasta de Eventos:</strong> storage/app/public/events</li>
+            </ul>
+        </div>
+
+        <h2>Teste de Imagem:</h2>
+        <p>Tentando carregar: <code>/storage/events/W9ofC2BfJ2FOsrXDhJl7VoDY54K5pwbASyQ1Stdi.png</code></p>
+        
+        <img 
+            src="/storage/events/W9ofC2BfJ2FOsrXDhJl7VoDY54K5pwbASyQ1Stdi.png" 
+            alt="Imagem de Teste do Evento"
+            onload="document.getElementById('status').className='info success'; document.getElementById('status').innerHTML='✅ <strong>Sucesso!</strong> A imagem foi carregada corretamente.'"
+            onerror="document.getElementById('status').className='info error'; document.getElementById('status').innerHTML='❌ <strong>Erro!</strong> A imagem não pôde ser carregada. Verifique as permissões e o link simbólico.'"
+        >
+
+        <div id="status" class="info">
+            ⏳ Carregando imagem...
+        </div>
+
+        <h3>Soluções Aplicadas:</h3>
+        <ol>
+            <li>✅ Link simbólico criado: <code>public/storage</code></li>
+            <li>✅ FILESYSTEM_DISK alterado para 'public' no .env</li>
+            <li>✅ Arquivos .htaccess criados para permitir acesso</li>
+            <li>✅ Verificação de permissões</li>
+        </ol>
+
+        <div class="info">
+            <p><strong>Nota:</strong> Se a imagem não carregar, verifique:</p>
+            <ul>
+                <li>Se o servidor web está rodando</li>
+                <li>Se as permissões das pastas estão corretas</li>
+                <li>Se o cache do navegador foi limpo</li>
+                <li>Se há algum firewall bloqueando o acesso</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

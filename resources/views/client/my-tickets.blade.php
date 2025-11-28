@@ -43,12 +43,24 @@
                         <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden">
                             <div class="p-6">
                                 <div class="flex flex-col md:flex-row gap-6">
-                                    <!-- Imagem -->
-                                    <div class="md:w-1/4">
+                                    <!-- Imagem com overlay ---->
+                                    <div class="md:w-1/4" style="position: relative;">
                                         @if($purchase->event->imagem)
-                                            <img src="{{ asset('storage/' . $purchase->event->imagem) }}" 
-                                                 alt="{{ $purchase->event->titulo }}" 
-                                                 class="w-full h-48 object-cover rounded-xl">
+                                            <div style="position: relative; width: 100%; height: 192px; border-radius: 0.75rem; overflow: hidden;">
+                                                <img src="{{ asset('storage/' . $purchase->event->imagem) }}" 
+                                                     alt="{{ $purchase->event->titulo }}" 
+                                                     style="width: 100%; height: 100%; object-fit: cover;">
+                                                
+                                                {{-- Overlay compacto --}}
+                                                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 70%, transparent 100%); padding: 0.75rem; color: white;">
+                                                    <div style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.75rem;">
+                                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                        <span style="font-weight: 600;">{{ \Carbon\Carbon::parse($purchase->event->data)->format('d/m/Y') }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @else
                                             <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-xl">
                                                 <span class="text-sm text-gray-400 font-medium">Sem imagem</span>
@@ -56,7 +68,7 @@
                                         @endif
                                     </div>
 
-                                    <!-- Informações -->
+                                    <!-- Informações ---->
                                     <div class="md:w-3/4">
                                         <div class="flex justify-between items-start mb-4">
                                             <div>

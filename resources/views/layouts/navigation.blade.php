@@ -5,17 +5,26 @@
                 <!-- Logo -->
                 <div class="navbar-brand">
                     <a href="{{ route('home') }}">
-                        <x-application-logo class="logo" />
+                        @if(file_exists(public_path('img/logo.jpeg')))
+                            <img src="{{ asset('img/logo.jpeg') }}" alt="JUNTTAÊ" class="logo">
+                        @else
+                            <x-application-logo class="logo" />
+                        @endif
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links moved to right -->
+            </div>
+
+            <!-- Settings Dropdown / Login Buttons -->
+            <div class="navbar-right">
                 <div class="navbar-links">
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Eventos') }}
                     </x-nav-link>
                     
-                    @auth
+                    <div class="navbar-auth">
+                @auth
                         @if(Auth::user()->tipo_usuario === 'curador')
                             <x-nav-link :href="route('curador.dashboard')" :active="request()->routeIs('curador.dashboard')">
                                 {{ __('Meus Eventos') }}
@@ -27,10 +36,7 @@
                         @endif
                     @endauth
                 </div>
-            </div>
-
-            <!-- Settings Dropdown / Login Buttons -->
-            <div class="navbar-right">
+                </div>
                 @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">

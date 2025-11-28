@@ -32,30 +32,46 @@
             @endif
 
             <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-                @if($event->imagem)
-                    <img src="{{ asset('storage/' . $event->imagem) }}" alt="{{ $event->titulo }}" class="w-full h-96 object-cover">
-                @else
-                    <div class="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span class="text-lg text-gray-400 font-medium">Sem imagem</span>
+                {{-- Banner com overlay de título --}}
+                <div style="position: relative; width: 100%; height: 400px; overflow: hidden;">
+                    @if($event->imagem)
+                        <img src="{{ asset('storage/' . $event->imagem) }}" alt="{{ $event->titulo }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                            <span class="text-lg text-gray-400 font-medium">Sem imagem</span>
+                        </div>
+                    @endif
+                    
+                    {{-- Overlay com título e data --}}
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 60%, transparent 100%); padding: 2.5rem 2rem 2rem; color: white;">
+                        <h1 style="font-size: 2.5rem; font-weight: 800; margin: 0 0 1rem 0; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                            {{ $event->titulo }}
+                        </h1>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 1.125rem; opacity: 0.95;">
+                            <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span style="font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.3);">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y \à\s H:i') }}</span>
+                        </div>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 1rem; opacity: 0.9; display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            </svg>
+                            {{ $event->local }}
+                        </p>
                     </div>
-                @endif
+                </div>
 
                 <div class="p-8">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ $event->titulo }}</h1>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div class="space-y-4">
                             <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Data e Hora</span>
-                                <span class="block text-base text-gray-900">{{ \Carbon\Carbon::parse($event->data)->format('d/m/Y \à\s H:i') }}</span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Local</span>
-                                <span class="block text-base text-gray-900">{{ $event->local }}</span>
-                            </div>
-                            <div>
                                 <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Categoria</span>
                                 <span class="block text-base text-gray-900">{{ $event->categoria }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Curador</span>
+                                <span class="block text-base text-gray-900">{{ $event->curador->name }}</span>
                             </div>
                         </div>
 
@@ -69,10 +85,6 @@
                                 <span class="block text-xl font-bold {{ $event->availableTickets() > 0 ? 'text-blue-600' : 'text-red-600' }}">
                                     {{ $event->availableTickets() }} de {{ $event->ingressos }}
                                 </span>
-                            </div>
-                            <div>
-                                <span class="block text-xs font-semibold text-gray-500 uppercase mb-1">Curador</span>
-                                <span class="block text-base text-gray-900">{{ $event->curador->name }}</span>
                             </div>
                         </div>
                     </div>
