@@ -1,0 +1,35 @@
+/* public/css/custom.css */
+
+/* BOTÕES E ELEMENTOS PRIMÁRIOS */
+.btn-primary {
+    background-color: #00A79E;
+    color: white;
+    border: none;
+    border-radius: 9999px; /* Totalmente arredondado */
+    font-weight: bold;
+    /* Ajuste de sombra para dar profundidade */
+    box-shadow: 0 4px 6px -1px rgba(0, 167, 158, 0.4), 0 2px 4px -2px rgba(0, 167, 158, 0.2);
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1); /* Um leve brilho ao passar o mouse */
+    box-shadow: 0 10px 15px -3px rgba(0, 167, 158, 0.5), 0 4px 6px -4px rgba(0, 167, 158, 0.5);
+}
+
+/* INPUTS (Embora este não esteja nesta tela, é bom manter o padrão) */
+.input-field {
+    background-color: #f3e5f5;
+    border: none;
+    padding: 1.5rem 1rem;
+    border-radius: 0.5rem;
+    /* Para Tailwind classes como w-full e focus serem aplicadas, evite substituir elas aqui */
+}
+
+/* CARDS E CONTAINERS */
+.card-base {
+    /* bg-white, shadow-md, e sm:rounded-lg já estão no HTML, esta classe é opcional */
+}
+
+.card-alert {
+    /* Estilo para a caixa de aviso/sem eventos */
+}
