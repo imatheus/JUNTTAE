@@ -15,8 +15,9 @@ class ClientController extends Controller
      */
     public function dashboard()
     {
-        // Busca eventos futuros ordenados por data
+        // Busca eventos futuros e publicados, ordenados por data
         $events = Event::where('data', '>=', now())
+            ->where('is_published', true)
             ->orderBy('data', 'asc')
             ->get();
 

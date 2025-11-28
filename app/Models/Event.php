@@ -11,7 +11,7 @@ class Event extends Model
 
     protected $fillable = [
         'titulo', 'imagem', 'data', 'local', 'valor',
-        'categoria', 'ingressos', 'descricao', 'user_id', 'whatsapp_group'
+        'categoria', 'ingressos', 'descricao', 'user_id', 'whatsapp_group', 'is_published'
     ];
     
     // Relação com o Curador (usuário)

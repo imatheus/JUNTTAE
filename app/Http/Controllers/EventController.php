@@ -49,6 +49,7 @@ class EventController extends Controller
             'descricao' => 'required|string',
             'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'whatsapp_group' => 'nullable|url', // Link do grupo WhatsApp (opcional)
+            'is_published' => 'nullable|boolean',
         ]);
 
         // 2. Upload da Imagem
@@ -108,6 +109,7 @@ class EventController extends Controller
             'descricao' => 'required|string',
             'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Imagem é opcional na edição
             'whatsapp_group' => 'nullable|url',
+            'is_published' => 'nullable|boolean',
         ]);
 
         // 2. Upload da Imagem (se fornecida)

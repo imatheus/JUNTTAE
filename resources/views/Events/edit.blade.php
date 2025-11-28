@@ -82,6 +82,14 @@
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Cole o link de convite do grupo do WhatsApp para que os compradores possam entrar após a compra.</p>
                         </div>
 
+                        <div class="md:col-span-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="is_published" value="1" {{ old('is_published', $event->is_published) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Publicar evento (tornar visível para clientes)') }}</span>
+                            </label>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Se desmarcado, o evento será salvo como rascunho e não aparecerá para os clientes.</p>
+                        </div>
+
                     </div>
 
                     <div class="flex justify-between mt-6">
