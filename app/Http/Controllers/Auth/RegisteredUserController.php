@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
+
 
 class RegisteredUserController extends Controller
 {
@@ -50,6 +50,11 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // Redireciona baseado no tipo de usuário
+        if ($user->tipo_usuario === 'curador') {
+            return redirect()->route('curador.dashboard');
+        }
+        
+        return redirect()->route('user.dashboard');
     }
 }

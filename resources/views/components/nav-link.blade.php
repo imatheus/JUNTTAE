@@ -2,10 +2,40 @@
 
 @php
 $classes = ($active ?? false)
-            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
-            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out';
+            ? 'nav-link nav-link-active'
+            : 'nav-link';
 @endphp
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
 </a>
+
+<style>
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.25rem;
+    border-bottom: 2px solid transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #6b7280;
+    transition: all 0.15s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+}
+
+.nav-link-active {
+    color: #1f2937;
+    border-bottom-color: #6366f1;
+}
+
+.nav-link:focus {
+    outline: none;
+    color: #374151;
+    border-bottom-color: #6366f1;
+}
+</style>

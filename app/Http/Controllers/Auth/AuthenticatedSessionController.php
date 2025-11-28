@@ -28,7 +28,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Redireciona baseado no tipo de usuário
+        $user = Auth::user();
+        
+        if ($user->tipo_usuario === 'curador') {
+            return redirect()->intended(route('curador.dashboard', absolute: false));
+        }
+        
+        // Usuário comum vai para a home (eventos disponíveis)
+        return redirect()->intended(route('home', absolute: false));
     }
 
     /**

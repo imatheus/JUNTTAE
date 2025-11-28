@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="flex gap-4">
-                        <a href="{{ route('usuario.dashboard') }}" 
+                        <a href="{{ route('home') }}" 
                            class="flex-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded text-center">
                             Ver Outros Eventos
                         </a>
