@@ -52,7 +52,7 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                                Meu Perfil
                             </x-dropdown-link>
 
                             <!-- Authentication -->
@@ -62,7 +62,7 @@
                                 <x-dropdown-link :href="route('logout')"
                                         onclick="event.preventDefault();
                                                     this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    Sair
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -72,7 +72,7 @@
                         <a href="{{ route('login') }}" class="btn-secondary btn-inline">
                             Entrar
                         </a>
-                        <a href="{{ route('register') }}" class="btn-primary btn-inline">
+                        <a href="{{ route('register') }}" class="btn-outline btn-inline">
                             Cadastrar
                         </a>
                     </div>
@@ -117,7 +117,7 @@
 
                     <div style="margin-top: 0.75rem; display: grid; gap: 0.25rem;">
                         <x-responsive-nav-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            Meu Perfil
                         </x-responsive-nav-link>
 
                         <!-- Authentication -->
@@ -127,7 +127,7 @@
                             <x-responsive-nav-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                Sair
                             </x-responsive-nav-link>
                         </form>
                     </div>

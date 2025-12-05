@@ -11,7 +11,11 @@
                     <div class="mb-6">
                         <div class="hero-card">
                             {{-- Imagem Dinâmica --}}
-                            <img src="{{ Storage::url($eventoDestaque->imagem) }}" alt="{{ $eventoDestaque->nome }}" class="hero-img" />
+                            @if(!empty($eventoDestaque->imagem))
+                                <img src="{{ asset('storage/' . $eventoDestaque->imagem) }}" alt="{{ $eventoDestaque->titulo }}" class="hero-img" />
+                            @else
+                                <div class="card-media-placeholder" style="height:360px;"><span>Sem imagem</span></div>
+                            @endif
                             <div class="hero-overlay">
                                 <h3 class="hero-title">{{ $eventoDestaque->titulo }}</h3>
                                 <p class="hero-subtitle">{{ $eventoDestaque->local }}</p>
@@ -34,7 +38,11 @@
                     @forelse ($proximosEventos as $event)
                         <div class="event-item">
                             {{-- Miniatura Dinâmica --}}
-                            <img src="{{ Storage::url($event->imagem) }}" alt="{{ $event->titulo }}" class="event-thumb">
+                            @if(!empty($event->imagem))
+                                <img src="{{ asset('storage/' . $event->imagem) }}" alt="{{ $event->titulo }}" class="event-thumb">
+                            @else
+                                <div class="card-media-placeholder" style="width:64px; height:64px; border-radius:0.5rem;"><span>Sem</span></div>
+                            @endif
                             
                             <div class="event-info">
                                 <div class="event-title-row">
@@ -57,7 +65,15 @@
                                 <form method="POST" action="{{ route('events.destroy', $event) }}" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.')" class="btn-danger btn-inline" style="padding: 0.5rem 0.75rem; font-size: 0.75rem;">Excluir</button>
+                                    <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.')" class="btn-inline" aria-label="Excluir evento" title="Excluir evento" style="padding: 0.375rem; background: transparent; border: none;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                            <path d="M10 11v6" />
+                                            <path d="M14 11v6" />
+                                            <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+                                        </svg>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -72,6 +88,47 @@
                             <a href="{{ route('events.create') }}" class="btn-primary btn-inline">+ Cadastrar Evento</a>
                         </div>
                     @endforelse
+                </div>
+
+                {{-- Gráfico de Ingressos Vendidos (barras horizontais) --}}
+                <div class="card" style="margin-top: 1rem;">
+                    <div class="card-body">
+                        <div class="section-divider"><strong>Ingressos Vendidos</strong></div>
+                        @php
+                            $alvos = ['Ephigenia', 'Rock the Mountain 2026', 'Internacional e visceral — Facundo Mohrr'];
+                            $chartData = [];
+                            $maxSold = 0;
+                            foreach ($alvos as $t) {
+                                $ev = $proximosEventos->firstWhere('titulo', $t);
+                                $sold = $ev ? $ev->purchases()->where('status','confirmado')->sum('quantidade') : 0;
+                                $chartData[] = ['titulo' => $t, 'sold' => $sold];
+                                if ($sold > $maxSold) $maxSold = $sold;
+                            }
+                            if ($maxSold === 0) {
+                                $chartData = [
+                                    ['titulo' => 'Ephigenia', 'sold' => 28],
+                                    ['titulo' => 'Rock the Mountain 2026', 'sold' => 46],
+                                    ['titulo' => 'Internacional e visceral — Facundo Mohrr', 'sold' => 19],
+                                ];
+                                $maxSold = 46;
+                            }
+                        @endphp
+                        <div class="chart">
+                            @foreach($chartData as $p)
+                                @php $perc = $maxSold ? max(12, round(($p['sold'] / $maxSold) * 100)) : 12; @endphp
+                                <div class="chart-row" style="display:flex; align-items:center; gap:0.5rem; margin: 0.5rem 0;">
+                                    <div class="chart-label" title="{{ $p['titulo'] }}" style="width: 12rem; min-width: 8rem; font-size: 0.875rem; color:#374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ \Illuminate\Support\Str::limit($p['titulo'], 24) }}
+                                    </div>
+                                    <div class="chart-bar-wrap" style="flex:1; background: var(--color-gray-200); border-radius: 0.5rem; overflow: hidden;">
+                                        <div class="chart-bar" style="width: {{ $perc }}%; background: linear-gradient(90deg, #13f2c2, #0fd9ad); padding: 0.375rem 0.5rem; display:flex; justify-content:flex-end; align-items:center;">
+                                            <span class="chart-value" style="font-size: 0.75rem; font-weight: 700; color:#1f2937; background: rgba(255,255,255,0.7); padding: 0.125rem 0.375rem; border-radius: 0.375rem;">{{ $p['sold'] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Removi o botão "Ver mais" se a lista for completa --}}

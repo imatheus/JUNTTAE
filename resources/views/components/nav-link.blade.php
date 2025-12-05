@@ -21,22 +21,26 @@ $classes = ($active ?? false)
     line-height: 1.25;
     color: #6b7280;
     border-radius: 0.5rem;
+    text-decoration: none; /* no underline */
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 .nav-link:hover {
     color: #1f2937;
     background-color: #f3f4f6; /* gray-100 */
+    text-decoration: none; /* no underline on hover */
 }
 
 .nav-link-active {
     color: #1f2937;
     background-color: #f3f4f6; /* keep bg gray when active */
+    text-decoration: none;
 }
 
 .nav-link:focus {
     outline: none;
     color: #1f2937;
     background-color: #f3f4f6;
+    text-decoration: none;
 }
 </style>

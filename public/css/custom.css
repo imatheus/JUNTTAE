@@ -371,6 +371,27 @@ input[type="file"]::file-selector-button:hover {
     font-size: 1.125rem;
 }
 
+/* BOTÃO OUTLINE */
+.btn-outline {
+    background-color: transparent;
+    color: #13f2c2;
+    border: 2px solid #13f2c2;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    padding: 0.875rem 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.btn-outline:hover {
+    background-color: rgba(19, 242, 194, 0.1);
+    transform: translateY(-1px);
+}
+.btn-outline:active {
+    transform: translateY(0);
+}
+
 /* TICKET / COUPON COMPONENT */
 .ticket {
     position: relative;

@@ -1,10 +1,9 @@
 <x-guest-layout>
     <!-- Logo e Título -->
     <div class="auth-header">
-        @if(file_exists(public_path('img/logo.jpeg')))
-            <img src="{{ asset('img/logo.jpeg') }}" alt="Junttaê Logo" class="auth-logo">
+        @if(file_exists(public_path('img/icone.png')))
+            <img src="{{ asset('img/icone.png') }}" alt="Ícone" class="auth-logo">
         @endif
-        <h1 class="auth-title">JUNTTAÊ</h1>
         <p class="auth-subtitle">Entre na sua conta</p>
     </div>
 

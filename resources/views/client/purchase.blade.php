@@ -6,12 +6,12 @@
         </div>
     </x-slot>
 
-    <div style="max-width: 56rem; margin: 0 auto;">
+    <div class="purchase-page" style="max-width: 56rem; margin: 0 auto;">
         @if(session('error'))
             <div class="alert alert-error">{{ session('error') }}</div>
         @endif
 
-        <div class="card">
+        <div class="card purchase-card">
             <div class="card-body">
                 {{-- Detalhes do Evento --}}
                 <div class="section-divider" style="display:flex; align-items:center; justify-content:space-between;">

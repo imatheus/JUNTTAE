@@ -23,6 +23,26 @@
                 </div>
             @endif
 
+            @isset($latestEvent)
+                <a href="{{ route('client.event.show', $latestEvent->id) }}" class="hero-card" style="display:block; overflow:hidden; margin-bottom: 1rem;">
+                    @if($latestEvent->imagem)
+                        <img src="{{ asset('storage/' . $latestEvent->imagem) }}" alt="{{ $latestEvent->titulo }}" class="hero-img">
+                    @else
+                        <div class="card-media-placeholder" style="height: 200px;"><span>Sem imagem</span></div>
+                    @endif
+                    <div class="hero-overlay">
+                        <div style="font-size:0.75rem; color:#e5e7eb; text-transform:uppercase; font-weight:700; opacity:0.9;">Último Evento</div>
+                        <h3 class="hero-title" style="font-size:1.5rem; margin:0.25rem 0 0.25rem 0;">{{ $latestEvent->titulo }}</h3>
+                        <div class="hero-meta" style="gap: 0.4rem;">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $latestEvent->local }}</span>
+                        </div>
+                    </div>
+                </a>
+            @endisset
+
             @if($events->isEmpty())
                 <div class="card">
                     <div class="card-body text-center">
@@ -81,8 +101,10 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                                             </svg>
                                             <span class="info-label">Ingressos restantes</span>
+                                            <span style="display:inline-flex; align-items:center; justify-content:center; padding: 0.125rem 0.5rem; border-radius: 999px; background: var(--color-gray-200); color:#1f2937; font-weight:700; font-size: 0.75rem;">
+                                                {{ $event->availableTickets() }}
+                                            </span>
                                         </div>
-                                        <span class="info-value">{{ $event->availableTickets() }}</span>
                                     </div>
                                 </div>
 

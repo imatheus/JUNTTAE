@@ -21,7 +21,12 @@ class ClientController extends Controller
             ->orderBy('data', 'asc')
             ->get();
 
-        return view('client.dashboard', compact('events'));
+        // Último evento cadastrado (publicado)
+        $latestEvent = Event::where('is_published', true)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return view('client.dashboard', compact('events', 'latestEvent'));
     }
 
     /**
